@@ -10,8 +10,11 @@ import java.util.UUID;
 import amata1219.like.masquerade.dsl.InventoryUI;
 import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
 import me.filoghost.fcommons.Strings;
+import me.filoghost.holographicdisplays.api.beta.HolographicDisplaysAPI;
 import me.filoghost.holographicdisplays.api.beta.hologram.Hologram;
 import me.filoghost.holographicdisplays.api.beta.hologram.line.HologramLine;
+import me.filoghost.holographicdisplays.api.beta.hologram.line.HologramLineClickListener;
+import me.filoghost.holographicdisplays.api.beta.internal.HolographicDisplaysAPIProvider;
 import me.filoghost.holographicdisplays.plugin.HolographicDisplays;
 import me.filoghost.holographicdisplays.plugin.commands.InternalHologramEditor;
 import me.filoghost.holographicdisplays.plugin.event.InternalHologramChangeEvent;
@@ -97,7 +100,7 @@ public class Like {
 		return owner;
 	}
 	
-	public void setOwner(UUID uuid){
+	public void setOwner(UUID uuid) throws CommandException {
 		Objects.requireNonNull(uuid);
 		PlayerData newOwner = plugin.players.get(uuid);
 		if (newOwner.isFavoriteLike(this)) {
@@ -210,9 +213,11 @@ public class Like {
 		setTouchHandler(null);
 	}
 
-	private void setTouchHandler(TouchHandler handler){
-		Location loc = hologram.getLocation();
+	private void setTouchHandler(HologramLineClickListener listener){
+		Location loc = hologram.getPosition().toLocation();
 		loc.setPitch(90.0F);
+		hologram.getLines().get(0);
+
 		CraftTouchableLine line = (CraftTouchableLine) hologram.getLine(0);
 		setTouchHandler(line, handler, loc.getWorld(), loc.getX(), loc.getY() - line.getHeight() * 3, loc.getZ());
 		line = (CraftTouchableLine) hologram.getLine(2);
@@ -220,6 +225,8 @@ public class Like {
 	}
 
 	private static void setTouchHandler(CraftTouchableLine line, TouchHandler handler, World world, double x, double y, double z) {
+		HolographicDisplaysAPI holographicDisplaysAPI = HolographicDisplaysAPI.get(Main.plugin());
+		holographicDisplaysAPI.register
 		try {
 			setTouchHandler.invoke(line, handler, world, x, y, z);
 		} catch (IllegalAccessException | InvocationTargetException e) {
