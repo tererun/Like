@@ -8,17 +8,20 @@ import java.util.Objects;
 import java.util.UUID;
 
 import amata1219.like.masquerade.dsl.InventoryUI;
-import com.gmail.filoghost.holographicdisplays.disk.StringConverter;
-import com.gmail.filoghost.holographicdisplays.object.line.CraftTextLine;
+import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
+import me.filoghost.fcommons.Strings;
+import me.filoghost.holographicdisplays.api.beta.hologram.Hologram;
+import me.filoghost.holographicdisplays.api.beta.hologram.line.HologramLine;
+import me.filoghost.holographicdisplays.plugin.HolographicDisplays;
+import me.filoghost.holographicdisplays.plugin.commands.InternalHologramEditor;
+import me.filoghost.holographicdisplays.plugin.event.InternalHologramChangeEvent;
+import me.filoghost.holographicdisplays.plugin.hologram.base.BaseHologramLines;
+import me.filoghost.holographicdisplays.plugin.internal.hologram.InternalHologram;
+import me.filoghost.holographicdisplays.plugin.internal.hologram.InternalHologramLine;
+import me.filoghost.holographicdisplays.plugin.internal.hologram.InternalTextHologramLine;
+import me.filoghost.holographicdisplays.plugin.lib.fcommons.command.validation.CommandException;
 import org.bukkit.Location;
 import org.bukkit.World;
-import com.gmail.filoghost.holographicdisplays.api.handler.TouchHandler;
-import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
-import com.gmail.filoghost.holographicdisplays.disk.HologramDatabase;
-import com.gmail.filoghost.holographicdisplays.object.NamedHologram;
-import com.gmail.filoghost.holographicdisplays.object.NamedHologramManager;
-import com.gmail.filoghost.holographicdisplays.object.line.CraftHologramLine;
-import com.gmail.filoghost.holographicdisplays.object.line.CraftTouchableLine;
 
 import amata1219.like.config.MainConfig;
 import amata1219.like.masquerade.task.AsyncTask;
@@ -32,29 +35,18 @@ import org.bukkit.entity.Player;
 public class Like {
 	
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy.MM.dd (E) HH:mm:ss");
-	private static final Method setTouchHandler;
 
-	static {
-		Method touchHandlerSetter = null;
-		try {
-			touchHandlerSetter = CraftTouchableLine.class.getDeclaredMethod("setTouchHandler", TouchHandler.class, World.class, double.class, double.class, double.class);
-			touchHandlerSetter.setAccessible(true);
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		}
-		setTouchHandler = touchHandlerSetter;
-	}
-			
 	private final Main plugin = Main.plugin();
 	private final MainConfig config = plugin.config();
 	
 	public final long id;
-	public final NamedHologram hologram;
+	public final InternalHologram hologram;
 	
 	private UUID owner;
 	private int favorites;
 	
-	public Like(NamedHologram hologram, UUID owner, int favorites){
+	public Like(InternalHologram hologram, UUID owner, int favorites) {
+
 		this.id = Long.parseLong(hologram.getName());
 		this.hologram = hologram;
 		this.owner = owner;
@@ -62,37 +54,43 @@ public class Like {
 		enableTouchHandler();
 	}
 	
-	public Like(NamedHologram hologram, UUID owner){
+	public Like(InternalHologram hologram, UUID owner) {
 		this.id = Long.parseLong(hologram.getName());
 		this.hologram = hologram;
 		this.owner = owner;
-		
-		appendTextLine(config.likeFavoritesText().apply(favorites));
-		appendTextLine(config.likeDescription().apply(owner));
-		appendTextLine(config.likeUsage());
+
+		try {
+			appendTextLine(config.likeFavoritesText().apply(favorites));
+			appendTextLine(config.likeDescription().apply(owner));
+			appendTextLine(config.likeUsage());
+		} catch (CommandException e) {
+			e.printStackTrace();
+		}
 
 		enableTouchHandler();
 	}
 
-	private void appendTextLine(String text) {
-		CraftTextLine line = hologram.appendTextLine(text);
-		line.setSerializedConfigValue(text);
+	private void appendTextLine(String text) throws CommandException {
+		InternalHologramEditor hologramEditor = HolographicDisplays.getInstance().getInternalHologramEditor();
+		InternalHologramLine line = hologramEditor.parseHologramLine(hologram, text);
+		hologram.getLines().add(line);
+		save(InternalHologramChangeEvent.ChangeType.EDIT_LINES);
 	}
 	
 	public World world(){
-		return hologram.getWorld();
+		return hologram.getPosition().getWorldIfLoaded();
 	}
 	
 	public int x(){
-		return (int) hologram.getX();
+		return (int) hologram.getPosition().getX();
 	}
 	
 	public int y(){
-		return (int) hologram.getY();
+		return (int) hologram.getPosition().getY();
 	}
 	
 	public int z(){
-		return (int) hologram.getZ();
+		return (int) hologram.getPosition().getZ();
 	}
 	
 	public UUID owner(){
@@ -120,10 +118,10 @@ public class Like {
 	}
 	
 	public String description(){
-		return ((TextLine) hologram.getLine(1)).getText();
+		return hologram.getLines().get(1).getSerializedConfigValue();
 	}
 	
-	public void setDescription(String description){
+	public void setDescription(String description) throws CommandException {
 		rewriteHologramLine(1, description);
 	}
 	
@@ -131,29 +129,26 @@ public class Like {
 		return favorites;
 	}
 	
-	public void incrementFavorites(){
+	public void incrementFavorites() throws CommandException {
 		favorites++;
 		rewriteHologramLine(0, config.likeFavoritesText().apply(favorites));
 	}
 	
-	public void decrementFavorites(){
+	public void decrementFavorites() throws CommandException {
 		favorites = Math.max(favorites - 1, 0);
 		rewriteHologramLine(0, config.likeFavoritesText().apply(favorites));
 	}
 	
-	private void rewriteHologramLine(int index, String text){
-		List<CraftHologramLine> lines = hologram.getLinesUnsafe();
-		lines.get(index).despawn();
-		String formattedText = StringConverter.toReadableFormat(text);
-		CraftTextLine line = new CraftTextLine(hologram, formattedText);
-		line.setSerializedConfigValue(formattedText);
+	private void rewriteHologramLine(int index, String text) throws CommandException {
+		InternalHologramEditor hologramEditor = HolographicDisplays.getInstance().getInternalHologramEditor();
+		BaseHologramLines<InternalHologramLine> lines = hologram.getLines();
+		InternalHologramLine line = hologramEditor.parseHologramLine(hologram, text);
 		lines.set(index, line);
-		hologram.refreshAll();
 		if (index == 0) {
 			disableTouchHandler();
 			enableTouchHandler();
 		}
-		save();
+		save(InternalHologramChangeEvent.ChangeType.EDIT_LINES);
 	}
 	
 	public String creationTimestamp(){
@@ -161,29 +156,25 @@ public class Like {
 	}
 	
 	public void teleportTo(Location loc){
-		hologram.teleport(loc.add(0, 2, 0));
-		hologram.despawnEntities();
-		hologram.refreshAll();
+		hologram.setPosition(loc.add(0, 2, 0));
 		disableTouchHandler();
 		enableTouchHandler();
-		save();
+		save(InternalHologramChangeEvent.ChangeType.EDIT_POSITION);
 	}
 	
-	public void save(){
-		HologramDatabase.saveHologram(hologram);
-		HologramDatabase.trySaveToDisk();
+	public void save(InternalHologramChangeEvent.ChangeType changeType){
+		HolographicDisplays.getInstance().getInternalHologramEditor().saveChanges(hologram, changeType);
 	}
 	
-	public void delete(boolean alsoSave){
+	public void delete(){
+		InternalHologramEditor hologramEditor = HolographicDisplays.getInstance().getInternalHologramEditor();
 		plugin.players.get(owner).unregisterLike(this);
 		AsyncTask.define(() -> plugin.players.values().forEach(data -> data.unfavoriteLike(this))).execute();
 		plugin.bookmarks.values().forEach(bookmark -> bookmark.likes.remove(this));
 		plugin.likes.remove(id);
 		plugin.likeDatabase().remove(this);
-		hologram.delete();
-		NamedHologramManager.removeHologram(hologram);
-		HologramDatabase.deleteHologram(hologram.getName());
-		if(alsoSave) HologramDatabase.trySaveToDisk();
+		hologramEditor.delete(hologram);
+		save(InternalHologramChangeEvent.ChangeType.DELETE);
 	}
 
 	private void enableTouchHandler() {

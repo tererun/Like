@@ -1,20 +1,21 @@
 package amata1219.like.command;
 
-import java.util.UUID;
-
+import amata1219.like.Like;
+import amata1219.like.Main;
 import amata1219.like.bryionake.constant.CommandSenderCasters;
 import amata1219.like.bryionake.dsl.BukkitCommandExecutor;
 import amata1219.like.bryionake.dsl.context.CommandContext;
-import amata1219.like.task.TaskRunner;
-import com.gmail.filoghost.holographicdisplays.object.NamedHologram;
-import com.gmail.filoghost.holographicdisplays.object.NamedHologramManager;
-
-import amata1219.like.Like;
-import amata1219.like.Main;
 import amata1219.like.config.MainConfig;
 import amata1219.like.playerdata.PlayerData;
+import amata1219.like.task.TaskRunner;
+import me.filoghost.holographicdisplays.plugin.HolographicDisplays;
+import me.filoghost.holographicdisplays.plugin.hologram.base.ImmutablePosition;
+import me.filoghost.holographicdisplays.plugin.internal.hologram.InternalHologram;
+import me.filoghost.holographicdisplays.plugin.internal.hologram.InternalHologramManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+
+import java.util.UUID;
 
 public class LikeCreationCommand implements BukkitCommandExecutor {
 
@@ -41,10 +42,9 @@ public class LikeCreationCommand implements BukkitCommandExecutor {
 			return;
 		}
 
-		NamedHologram hologram = new NamedHologram(sender.getLocation().add(0, 2, 0), String.valueOf(System.currentTimeMillis()));
-		Like like = new Like(hologram, uniqueId);
-		NamedHologramManager.addHologram(hologram);
-		hologram.refreshAll();
+		InternalHologramManager internalHologramManager = HolographicDisplays.getInstance().getInternalHologramManager();
+		InternalHologram internalHologram = internalHologramManager.createHologram(String.valueOf(System.currentTimeMillis()), ImmutablePosition.of(sender.getLocation().add(0, 2, 0)));
+		Like like = new Like(internalHologram, uniqueId);
 		like.save();
 
 		plugin.likes.put(like.id, like);

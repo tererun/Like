@@ -19,7 +19,6 @@ import amata1219.like.playerdata.PlayerDatabase;
 import amata1219.like.task.TourRegularNotificationTask;
 import amata1219.like.tuplet.Tuple;
 import at.pcgamingfreaks.UUIDConverter;
-import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -87,7 +86,7 @@ public class Main extends JavaPlugin {
 		plugin = this;
 		
 		Plugin vault = getServer().getPluginManager().getPlugin("Vault");
-		if(!(vault instanceof Vault)) throw new NullPointerException("Not found Vault.");
+		if (vault == null) throw new NullPointerException("Not found Vault.");
 
 		RegisteredServiceProvider<Economy> provider = getServer().getServicesManager().getRegistration(Economy.class);
 		if(provider == null) throw new NullPointerException("Not found Vault.");
