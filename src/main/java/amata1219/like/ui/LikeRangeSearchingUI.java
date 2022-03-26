@@ -57,7 +57,7 @@ public class LikeRangeSearchingUI extends AbstractSortableLikeListUI {
 
                 s.onClick(e -> {
                     Location respawnPoint = player.getLocation();
-                    player.teleport(like.hologram.getLocation());
+                    player.teleport(like.hologram.getPosition().toLocation());
                     ControlLikeViewListener listener = plugin.controlLikeViewListener;
                     listener.viewersToRespawnPoints.put(player, respawnPoint);
                     listener.viewersToLikesViewed.put(player, like);
