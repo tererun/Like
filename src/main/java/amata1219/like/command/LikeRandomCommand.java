@@ -44,8 +44,7 @@ public class LikeRandomCommand implements BukkitCommandExecutor {
         SoundEffects.PREPARED.play(sender);
 
         String remainingSeconds = String.format("%.1f", config.randomTeleportationDelayedTicks() / 20.0f);
-        sender.sendMessage(new String[]{
-                config.randomTeleportationMessage(),
+        sender.sendMessage(config.randomTeleportationMessage(),
                 ChatColor.GRAY + "・説明文: " + ChatColor.RESET + like.description(),
                 ChatColor.GRAY + "・ID: " + ChatColor.GREEN + like.id,
                 ChatColor.GRAY + "・作成者: " + ChatColor.GREEN + like.ownerName(),
@@ -53,8 +52,7 @@ public class LikeRandomCommand implements BukkitCommandExecutor {
                 ChatColor.GRAY + "・作成日時: " + ChatColor.GREEN + like.creationTimestamp(),
                 ChatColor.GRAY + "・座標: " + ChatColor.GREEN + config.worldAlias(like.world()) + ", " + like.x() + ", " + like.y() + ", " + like.z(),
                 ChatColor.RED + "" + costs + "" + config.unitOfCost() + "を消費しました。",
-                ChatColor.GREEN + "" + remainingSeconds + "秒後にテレポートします！"
-        });
+                ChatColor.GREEN + "" + remainingSeconds + "秒後にテレポートします！");
 
         TaskRunner.runTaskLaterSynchronously(task -> {
             sender.teleport(like.hologram.getLocation());
