@@ -32,6 +32,7 @@ dependencies {
     compileOnly group: 'at.pcgamingfreaks.pcgf_pluginlib', name: 'pcgf_pluginlib-bukkit', version: '1.0.36-SNAPSHOT'
     compileOnly group: 'at.pcgamingfreaks.pcgf_pluginlib', name: 'pcgf_pluginlib-uuid', version: '1.0.29-SNAPSHOT'
     compileOnly group: 'me.filoghost.holographicdisplays', name: 'holographicdisplays-api', version: '3.0.0-SNAPSHOT'
+    compileOnly group: 'me.filoghost.holographicdisplays', name: 'holographicdisplays-plugin', version: '3.0.0-SNAPSHOT'
 }
 
 tasks.withType(JavaCompile) {
