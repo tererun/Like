@@ -7,15 +7,15 @@ import amata1219.like.consts.Like;
 public class LikeMap extends ChunkMap<Like> {
 	
 	public void put(Like like){
-		put(like.x(), like.z(), like);
+		put(like.blockX(), like.blockZ(), like);
 	}
 	
 	public void remove(Like like){
-		remove(like.x(), like.z(), like);
+		remove(like.blockX(), like.blockZ(), like);
 	}
 	
 	public boolean contains(Like like){
-		return get(like.x(), like.z()).contains(like);
+		return get(like.blockX(), like.blockZ()).contains(like);
 	}
 	
 	@Override

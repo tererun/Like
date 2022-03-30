@@ -50,7 +50,7 @@ public class LikeRandomCommand implements BukkitCommandExecutor {
                 ChatColor.GRAY + "・作成者: " + ChatColor.GREEN + like.ownerName(),
                 ChatColor.GRAY + "・お気に入り数: " + ChatColor.GREEN + like.favorites(),
                 ChatColor.GRAY + "・作成日時: " + ChatColor.GREEN + like.creationTimestamp(),
-                ChatColor.GRAY + "・座標: " + ChatColor.GREEN + config.worldAlias(like.world()) + ", " + like.x() + ", " + like.y() + ", " + like.z(),
+                ChatColor.GRAY + "・座標: " + ChatColor.GREEN + config.worldAlias(like.world()) + ", " + like.blockX() + ", " + like.blockY() + ", " + like.blockZ(),
                 ChatColor.RED + "" + costs + "" + config.unitOfCost() + "を消費しました。",
                 ChatColor.GREEN + "" + remainingSeconds + "秒後にテレポートします！");
 
