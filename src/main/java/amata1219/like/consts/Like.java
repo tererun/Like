@@ -63,16 +63,28 @@ public class Like {
         return hologram.getPosition().getWorldIfLoaded();
     }
 
-    public int x() {
+    public int blockX() {
         return (int) hologram.getPosition().getX();
     }
 
-    public int y() {
+    public int blockY() {
         return (int) hologram.getPosition().getY();
     }
 
-    public int z() {
+    public int blockZ() {
         return (int) hologram.getPosition().getZ();
+    }
+
+    public double x() {
+        return hologram.getPosition().getX();
+    }
+
+    public double y() {
+        return hologram.getPosition().getY();
+    }
+
+    public double z() {
+        return hologram.getPosition().getZ();
     }
 
     public UUID owner() {
