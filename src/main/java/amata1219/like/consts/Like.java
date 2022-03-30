@@ -219,7 +219,7 @@ public class Like {
 
     @Override
     public String toString() {
-        return owner.toString() + "," + favorites;
+        return owner.toString() + "," + favorites + "," + world().getUID() + ":" + x() + ":" + y() + ":" + z();
     }
 
 }
