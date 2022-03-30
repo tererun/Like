@@ -8,10 +8,8 @@ import amata1219.like.bryionake.dsl.context.CommandContext;
 import amata1219.like.config.MainConfig;
 import amata1219.like.playerdata.PlayerData;
 import amata1219.like.task.TaskRunner;
-import me.filoghost.holographicdisplays.plugin.HolographicDisplays;
-import me.filoghost.holographicdisplays.plugin.hologram.base.ImmutablePosition;
-import me.filoghost.holographicdisplays.plugin.internal.hologram.InternalHologram;
-import me.filoghost.holographicdisplays.plugin.internal.hologram.InternalHologramManager;
+import me.filoghost.holographicdisplays.api.beta.HolographicDisplaysAPI;
+import me.filoghost.holographicdisplays.api.beta.hologram.Hologram;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -42,9 +40,9 @@ public class LikeCreationCommand implements BukkitCommandExecutor {
 			return;
 		}
 
-		InternalHologramManager internalHologramManager = HolographicDisplays.getInstance().getInternalHologramManager();
-		InternalHologram internalHologram = internalHologramManager.createHologram(String.valueOf(System.currentTimeMillis()), ImmutablePosition.of(sender.getLocation().add(0, 2, 0)));
-		Like like = new Like(internalHologram, uniqueId);
+		HolographicDisplaysAPI holographicDisplaysAPI = Main.getHolographicDisplaysAPI();
+		Hologram hologram = holographicDisplaysAPI.createHologram(sender.getLocation().add(0, 2, 0));
+		Like like = new Like(hologram, System.currentTimeMillis(), uniqueId);
 		like.save();
 
 		plugin.likes.put(like.id, like);
