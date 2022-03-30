@@ -55,7 +55,7 @@ public class LikeRandomCommand implements BukkitCommandExecutor {
                 ChatColor.GREEN + "" + remainingSeconds + "秒後にテレポートします！");
 
         TaskRunner.runTaskLaterSynchronously(task -> {
-            sender.teleport(like.hologram.getLocation());
+            sender.teleport(like.hologram.getPosition().toLocation());
             SoundEffects.SUCCEEDED.play(sender);
             sender.sendMessage(ChatColor.GREEN + "Like (ID: " + like.id + ") にテレポートしました！");
         }, config.randomTeleportationDelayedTicks());

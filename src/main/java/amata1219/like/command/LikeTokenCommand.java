@@ -24,7 +24,7 @@ public class LikeTokenCommand implements BukkitCommandExecutor {
 					}
 
 					Like like = parsedArguments.poll();
-					sender.teleport(like.hologram.getLocation());
+					sender.teleport(like.hologram.getPosition().toLocation());
 					Main.plugin().config().teleportationText().apply(like).sendTo(sender);
 				},
 				Parsers.str,

@@ -40,7 +40,7 @@ public class TourLikeListUI extends AbstractSortableLikeListUI {
                             Text.of("&7-お気に入り数: &a-%s").format(like.favorites()),
                             Text.of("&7-作成日時: &a-%s").format(like.creationTimestamp()),
                             Text.of("&7-ワールド: &a-%s").format(config.worldAlias(like.world())),
-                            Text.of("&7-座標: &a-X-&7-: &a-%s Y-&7-: &a-%s Z-&7-: &a-%s").format(like.x(), like.y(), like.z()),
+                            Text.of("&7-座標: &a-X-&7-: &a-%s Y-&7-: &a-%s Z-&7-: &a-%s").format(like.blockX(), like.blockY(), like.blockZ()),
                             "",
                             Text.color("&7-クリック: 下記機能の実行確認画面に移行します！"),
                             Text.of("&7-: &a-半径%sm以内にいるプレイヤーをこのLikeに招待する！ (%s" + config.unitOfCost() + ")").format(config.radiusOfInvitationScope(), config.invitationCosts())
