@@ -5,7 +5,6 @@ import amata1219.like.Main;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
