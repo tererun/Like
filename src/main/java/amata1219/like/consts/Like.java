@@ -1,5 +1,7 @@
 package amata1219.like.consts;
 
+import amata1219.like.Main;
+import amata1219.like.config.LikeSaveQueue;
 import amata1219.like.config.MainConfig;
 import amata1219.like.masquerade.dsl.InventoryUI;
 import amata1219.like.masquerade.task.AsyncTask;
@@ -154,17 +156,23 @@ public class Like {
     }
 
     public void save() {
-        // TODO: 2022/03/27
+        LikeSaveQueue likeSaveTask = new LikeSaveQueue(UUID.randomUUID());
+        likeSaveTask.addLike(this);
+        likeSaveTask.saveChanges();
     }
 
-    public void delete() {
+    public void delete(boolean alsoSave) {
         plugin.players.get(owner).unregisterLike(this);
         AsyncTask.define(() -> plugin.players.values().forEach(data -> data.unfavoriteLike(this))).execute();
         plugin.bookmarks.values().forEach(bookmark -> bookmark.likes.remove(this));
         plugin.likes.remove(id);
         plugin.likeDatabase().remove(this);
         hologram.delete();
-        save();
+        if (alsoSave) {
+            LikeSaveQueue likeSaveTask = new LikeSaveQueue(UUID.randomUUID());
+            likeSaveTask.addLike(this);
+            likeSaveTask.saveDelete();
+        }
     }
 
     private void enableHologramLineClickListener() {
