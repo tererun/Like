@@ -1,6 +1,6 @@
 package amata1219.like.ui;
 
-import amata1219.like.Like;
+import amata1219.like.consts.Like;
 import amata1219.like.Main;
 import amata1219.like.config.MainConfig;
 import amata1219.like.masquerade.dsl.component.Layout;

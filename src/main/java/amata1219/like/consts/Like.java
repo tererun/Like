@@ -1,4 +1,4 @@
-package amata1219.like;
+package amata1219.like.consts;
 
 import amata1219.like.config.MainConfig;
 import amata1219.like.masquerade.dsl.InventoryUI;

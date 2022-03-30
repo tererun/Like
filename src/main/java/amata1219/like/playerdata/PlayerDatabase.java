@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
-import amata1219.like.Like;
+import amata1219.like.consts.Like;
 import amata1219.like.config.Config;
 
 public class PlayerDatabase extends Config {

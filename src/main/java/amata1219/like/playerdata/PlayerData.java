@@ -2,7 +2,7 @@ package amata1219.like.playerdata;
 
 import java.util.HashMap;
 
-import amata1219.like.Like;
+import amata1219.like.consts.Like;
 
 public class PlayerData {
 	

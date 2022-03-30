@@ -6,7 +6,7 @@ import java.util.stream.IntStream;
 
 import org.bukkit.entity.Player;
 
-import amata1219.like.Like;
+import amata1219.like.consts.Like;
 import amata1219.like.bookmark.Bookmark;
 import amata1219.like.bookmark.Order;
 import amata1219.like.config.MainConfig.IconType;

@@ -4,7 +4,7 @@ import amata1219.like.bryionake.constant.CommandSenderCasters;
 import amata1219.like.bryionake.constant.Parsers;
 import amata1219.like.bryionake.dsl.BukkitCommandExecutor;
 import amata1219.like.bryionake.dsl.context.CommandContext;
-import amata1219.like.Like;
+import amata1219.like.consts.Like;
 import amata1219.like.Main;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

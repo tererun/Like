@@ -1,6 +1,6 @@
 package amata1219.like.config;
 
-import amata1219.like.Like;
+import amata1219.like.consts.Like;
 import amata1219.like.Main;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;

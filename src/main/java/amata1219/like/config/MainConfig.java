@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
-import amata1219.like.Like;
+import amata1219.like.consts.Like;
 import amata1219.like.Main;
 import amata1219.like.masquerade.text.Text;
 
