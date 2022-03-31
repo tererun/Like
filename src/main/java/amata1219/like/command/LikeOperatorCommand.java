@@ -58,7 +58,7 @@ public class LikeOperatorCommand implements BukkitCommandExecutor {
 		CommandContext<CommandSender> delete = define(
 				() -> join(
 						ChatColor.RED + "正しいコマンドが入力されなかったため実行できませんでした。",
-					ChatColor.GRAY + "Likeを削除する：/likeop delete [LikeのID]"
+						ChatColor.GRAY + "Likeを削除する：/likeop delete [LikeのID]"
 				),
 				(sender, unparsedArguments, parsedArguments) -> {
 					Like like = parsedArguments.poll();
