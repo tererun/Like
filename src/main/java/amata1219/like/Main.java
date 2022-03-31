@@ -138,16 +138,16 @@ public class Main extends JavaPlugin {
         getServer().getScheduler().runTaskLater(this, () -> {
             likeDatabase = new LikeDatabase();
             Tuple<HashMap<Long, Like>, HashMap<UUID, List<Like>>> maps = likeDatabase.readAll();
-            maps.first.forEach(likes::put);
+            likes.putAll(maps.first);
 
             for (Like like : likes.values()) likeMap.put(like);
 
             playerDatabase = new PlayerDatabase();
-            playerDatabase.readAll(maps.second).forEach(players::put);
+            players.putAll(playerDatabase.readAll(maps.second));
 
             likeLimitDatabase = new LikeLimitDatabase();
             bookmarkDatabase = new BookmarkDatabase();
-            bookmarkDatabase.readAll().forEach(bookmarks::put);
+            bookmarks.putAll(bookmarkDatabase.readAll());
 
             tourConfig = new TourConfig();
             if (tourConfig.notificationIsEnabled())
