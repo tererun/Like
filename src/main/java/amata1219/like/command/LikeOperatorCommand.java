@@ -1,5 +1,8 @@
 package amata1219.like.command;
 
+import amata1219.like.Main;
+import amata1219.like.bookmark.Bookmark;
+import amata1219.like.bookmark.Order;
 import amata1219.like.bryionake.constant.CommandSenderCasters;
 import amata1219.like.bryionake.constant.Parsers;
 import amata1219.like.bryionake.dsl.BukkitCommandExecutor;
@@ -9,13 +12,19 @@ import amata1219.like.bryionake.dsl.parser.FailableParser;
 import amata1219.like.bryionake.interval.Endpoint;
 import amata1219.like.bryionake.interval.Interval;
 import amata1219.like.chunk.LikeMap;
-import amata1219.like.config.LikeLimitDatabase;
-import amata1219.like.config.MainConfig;
-import amata1219.like.config.TourConfig;
+import amata1219.like.config.*;
+import amata1219.like.consts.Like;
+import amata1219.like.consts.OldLike;
 import amata1219.like.sound.SoundEffects;
 import amata1219.like.task.TourRegularNotificationTask;
-import com.gmail.filoghost.holographicdisplays.disk.HologramDatabase;
+import amata1219.like.tuplet.Tuple;
 import com.google.common.base.Joiner;
+import me.filoghost.holographicdisplays.api.beta.HolographicDisplaysAPI;
+import me.filoghost.holographicdisplays.api.beta.hologram.Hologram;
+import me.filoghost.holographicdisplays.plugin.HolographicDisplays;
+import me.filoghost.holographicdisplays.plugin.commands.InternalHologramEditor;
+import me.filoghost.holographicdisplays.plugin.internal.hologram.InternalHologram;
+import me.filoghost.holographicdisplays.plugin.internal.hologram.InternalHologramManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -23,10 +32,7 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
@@ -403,6 +409,38 @@ public class LikeOperatorCommand implements BukkitCommandExecutor {
 				bind("notice", noticeBranches)
 		);
 
+		CommandContext<CommandSender> convertToV4 = (sender, unparsedArguments, parsedArguments) -> {
+			sender.sendMessage(ChatColor.GREEN + "v3からv4にデータを移行します");
+			Main plugin = Main.plugin();
+			OldLikeDatabase oldLikeDatabase = new OldLikeDatabase();
+			Tuple<HashMap<Long, OldLike>, HashMap<UUID, List<OldLike>>> maps = oldLikeDatabase.readAll();
+			HolographicDisplaysAPI holographicDisplaysAPI = Main.getHolographicDisplaysAPI();
+			InternalHologramManager internalHologramManager = HolographicDisplays.getInstance().getInternalHologramManager();
+			InternalHologramEditor internalHologramEditor = HolographicDisplays.getInstance().getInternalHologramEditor();
+			LikeSaveQueue likeSaveQueue = new LikeSaveQueue(UUID.randomUUID());
+			for (OldLike oldLike : new HashMap<>(maps.first).values()) {
+				InternalHologram internalHologram = internalHologramManager.getHologramByName(String.valueOf(oldLike.id));
+				Hologram hologram = holographicDisplaysAPI.createHologram(internalHologram.getPosition().toLocation());
+				Like like = new Like(hologram, oldLike.id, oldLike.owner(), oldLike.favorites(), oldLike.description(), true);
+				plugin.likes.put(like.id, like);
+				plugin.likeMap.put(like);
+				likeSaveQueue.addLike(like);
+				internalHologramEditor.delete(internalHologram);
+			}
+			HashMap<UUID, List<OldLike>> readSecond = new HashMap<>(maps.second);
+			HashMap<UUID, List<Like>> convertedSecond = new HashMap<>();
+			for (UUID uuid : readSecond.keySet()) {
+				List<Like> likes = new ArrayList<>();
+				for (OldLike oldLike : readSecond.get(uuid)) {
+					likes.add(plugin.likes.get(oldLike.id));
+				}
+				convertedSecond.put(uuid, likes);
+			}
+			plugin.players.putAll(plugin.playerDatabase().readAll(convertedSecond));
+			likeSaveQueue.saveChanges();
+			sender.sendMessage(ChatColor.GREEN + "v3からv4へのデータ移行が完了しました!");
+		};
+
 		executor = define(
 				() -> join(
 						ChatColor.GRAY + "Likeを現在地に移動する: /likeop move [like_id]",
@@ -420,7 +458,8 @@ public class LikeOperatorCommand implements BukkitCommandExecutor {
 						ChatColor.GRAY + "ブックマークをソートする: /likeop book sort [book_name] [newest/oldest]",
 						ChatColor.GRAY + "tour.ymlを再読み込みする：/likeop tour reload",
 						ChatColor.GRAY + "ツアー用のLikeを指定数分ランダムにピックアップする：/likeop tour shuffle [ピックアップする個数]",
-						ChatColor.GRAY + "ツアーの定期告知を停止する：/likeop tour notice stop"
+						ChatColor.GRAY + "ツアーの定期告知を停止する：/likeop tour notice stop",
+						ChatColor.GRAY + "v3からv4にデータを移行する：/likeop converttov4"
 				),
 				bind("move", move),
 				bind("delete", delete),
@@ -431,7 +470,8 @@ public class LikeOperatorCommand implements BukkitCommandExecutor {
 				bind("reload", reload),
 				bind("limit", limit),
 				bind("book", bookmarkCommandsBranches),
-				bind("tour", tourBranches)
+				bind("tour", tourBranches),
+				bind("converttov4", convertToV4)
 		);
 	}
 
