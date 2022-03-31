@@ -32,13 +32,14 @@ public class LikeDatabase extends Config {
         HashMap<UUID, List<Like>> playerLikes = new HashMap<>();
         for (String path : config.getKeys(false)) {
             long id = Long.parseLong(path);
-            String[] data = config.getString(path).split(",");
+            String[] data = config.getString(path).split(",", 4);
             UUID owner = UUID.fromString(data[0]);
             int favorites = Integer.parseInt(data[1]);
             String[] locations = data[2].split(":");
             Location location = new Location(Bukkit.getWorld(UUID.fromString(locations[0])), Double.parseDouble(locations[1]), Double.parseDouble(locations[2]), Double.parseDouble(locations[3]));
+            String description = data[3];
             Hologram hologram = holographicDisplaysAPI.createHologram(location);
-            Like like = new Like(hologram, id, owner, favorites);
+            Like like = new Like(hologram, id, owner, favorites, description, false);
             likes.put(id, like);
             if (!playerLikes.containsKey(owner)) playerLikes.put(owner, new ArrayList<>());
             playerLikes.get(owner).add(like);
