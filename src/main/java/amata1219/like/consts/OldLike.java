@@ -2,8 +2,8 @@ package amata1219.like.consts;
 
 import amata1219.like.Main;
 import amata1219.like.config.MainConfig;
-import me.filoghost.holographicdisplays.api.beta.hologram.line.TextHologramLine;
 import me.filoghost.holographicdisplays.plugin.internal.hologram.InternalHologram;
+import me.filoghost.holographicdisplays.plugin.internal.hologram.InternalTextHologramLine;
 import org.bukkit.World;
 
 import java.text.SimpleDateFormat;
@@ -64,7 +64,7 @@ public class OldLike {
     }
 
     public String description() {
-        return ((TextHologramLine) hologram.getLines().get(1)).getText();
+        return ((InternalTextHologramLine) hologram.getLines().get(1)).getText();
     }
 
     public int favorites() {
