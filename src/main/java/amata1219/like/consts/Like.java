@@ -36,24 +36,34 @@ public class Like {
 
     private UUID owner;
     private int favorites;
-
-    public Like(Hologram hologram, long id, UUID owner, int favorites) {
-        this.hologram = hologram;
-        this.id = id;
-        this.owner = owner;
-        this.favorites = favorites;
-        enableHologramLineClickListener();
-    }
+    private String description;
 
     public Like(Hologram hologram, long id, UUID owner) {
         this.hologram = hologram;
         this.id = id;
         this.owner = owner;
+        String defaultDescription = config.likeDescription().apply(owner);
+        this.description = defaultDescription;
         appendTextLine(config.likeFavoritesText().apply(favorites));
-        appendTextLine(config.likeDescription().apply(owner));
+        appendTextLine(defaultDescription);
         appendTextLine(config.likeUsage());
 
         enableHologramLineClickListener();
+    }
+
+    public Like(Hologram hologram, long id, UUID owner, int favorites, String description, boolean convert) {
+        this.hologram = hologram;
+        this.id = id;
+        this.owner = owner;
+        this.favorites = favorites;
+        this.description = description;
+        if (convert) {
+            appendTextLine(config.likeFavoritesText().apply(favorites));
+            appendTextLine(description);
+            appendTextLine(config.likeUsage());
+
+            enableHologramLineClickListener();
+        }
     }
 
     private void appendTextLine(String text) {
@@ -114,10 +124,11 @@ public class Like {
     }
 
     public String description() {
-        return ((TextHologramLine) hologram.getLines().get(1)).getText();
+        return description;
     }
 
     public void setDescription(String description) {
+        this.description = description;
         rewriteHologramLine(1, description);
     }
 
@@ -219,7 +230,7 @@ public class Like {
 
     @Override
     public String toString() {
-        return owner.toString() + "," + favorites + "," + world().getUID() + ":" + x() + ":" + y() + ":" + z();
+        return owner.toString() + "," + favorites + "," + world().getUID() + ":" + x() + ":" + y() + ":" + z() + "," + description;
     }
 
 }
