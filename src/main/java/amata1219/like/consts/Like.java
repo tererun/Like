@@ -167,9 +167,9 @@ public class Like {
     }
 
     public void save() {
-        LikeSaveQueue likeSaveTask = new LikeSaveQueue(UUID.randomUUID());
-        likeSaveTask.addLike(this);
-        likeSaveTask.saveChanges();
+        LikeSaveQueue likeSaveQueue = new LikeSaveQueue(UUID.randomUUID());
+        likeSaveQueue.addLike(this);
+        likeSaveQueue.saveChanges();
     }
 
     public void delete(boolean alsoSave) {
@@ -180,9 +180,9 @@ public class Like {
         plugin.likeDatabase().remove(this);
         hologram.delete();
         if (alsoSave) {
-            LikeSaveQueue likeSaveTask = new LikeSaveQueue(UUID.randomUUID());
-            likeSaveTask.addLike(this);
-            likeSaveTask.saveDelete();
+            LikeSaveQueue likeSaveQueue = new LikeSaveQueue(UUID.randomUUID());
+            likeSaveQueue.addLike(this);
+            likeSaveQueue.saveDelete();
         }
     }
 

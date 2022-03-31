@@ -85,11 +85,13 @@ public class LikeOperatorCommand implements BukkitCommandExecutor {
 					}
 
 					int deletedLikesCount = playerLikes.size();
+					LikeSaveQueue likeSaveQueue = new LikeSaveQueue(UUID.randomUUID());
 					for (Like like : playerLikes.values()) {
 						plugin.likeMap.remove(like);
 						like.delete(false);
+						likeSaveQueue.addLike(like);
 					}
-					HologramDatabase.trySaveToDisk();
+					likeSaveQueue.saveDelete();
 
 					sender.sendMessage(ChatColor.DARK_RED + player.getName() + "が作成したLike(" + deletedLikesCount + ")を全て削除しました。");
 				},
@@ -105,14 +107,16 @@ public class LikeOperatorCommand implements BukkitCommandExecutor {
 					World world = parsedArguments.poll();
 					AtomicInteger count = new AtomicInteger();
 					Main plugin = Main.plugin();
+					LikeSaveQueue likeSaveQueue = new LikeSaveQueue(UUID.randomUUID());
 					for (Like like : new HashMap<>(plugin.likes).values()) {
 						if (like.world().equals(world)) {
 							plugin.likeMap.remove(like);
 							like.delete(false);
 							count.incrementAndGet();
+							likeSaveQueue.addLike(like);
 						}
 					}
-					HologramDatabase.trySaveToDisk();
+					likeSaveQueue.saveDelete();
 					sender.sendMessage(ChatColor.DARK_RED + world.getName() + "ワールドに存在する全Like(" + count.get() + ")を削除しました。");
 				},
 				Parsers.world
