@@ -152,6 +152,7 @@ public class TpInvConfirmationUI implements InventoryUI {
 			}, 18);
 			
 			AtomicInteger slotIndex = new AtomicInteger(19);
+
 			plugin.players.get(like.owner()).likes.values().stream()
 			.filter(like -> like != this.like)
 			.sorted(Comparator.comparing(Like::favorites).reversed())
