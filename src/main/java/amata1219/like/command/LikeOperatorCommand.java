@@ -421,7 +421,7 @@ public class LikeOperatorCommand implements BukkitCommandExecutor {
 			for (OldLike oldLike : new HashMap<>(maps.first).values()) {
 				InternalHologram internalHologram = internalHologramManager.getHologramByName(String.valueOf(oldLike.id));
 				Hologram hologram = holographicDisplaysAPI.createHologram(internalHologram.getPosition().toLocation());
-				Like like = new Like(hologram, oldLike.id, oldLike.owner(), oldLike.favorites(), oldLike.description(), true);
+				Like like = new Like(hologram, oldLike.id, oldLike.owner(), oldLike.favorites(), oldLike.description());
 				plugin.likes.put(like.id, like);
 				plugin.likeMap.put(like);
 				likeSaveQueue.addLike(like);

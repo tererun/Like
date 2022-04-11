@@ -51,19 +51,17 @@ public class Like {
         enableHologramLineClickListener();
     }
 
-    public Like(Hologram hologram, long id, UUID owner, int favorites, String description, boolean convert) {
+    public Like(Hologram hologram, long id, UUID owner, int favorites, String description) {
         this.hologram = hologram;
         this.id = id;
         this.owner = owner;
         this.favorites = favorites;
         this.description = description;
-        if (convert) {
-            appendTextLine(config.likeFavoritesText().apply(favorites));
-            appendTextLine(description);
-            appendTextLine(config.likeUsage());
+        appendTextLine(config.likeFavoritesText().apply(favorites));
+        appendTextLine(description);
+        appendTextLine(config.likeUsage());
 
-            enableHologramLineClickListener();
-        }
+        enableHologramLineClickListener();
     }
 
     private void appendTextLine(String text) {
@@ -187,45 +185,45 @@ public class Like {
     }
 
     private void enableHologramLineClickListener() {
-		setHologramLineClickListener(this::touchHandler);
+        setHologramLineClickListener(this::touchHandler);
     }
 
-	private void disableHologramLineClickListener() {
-		setHologramLineClickListener(null);
-	}
+    private void disableHologramLineClickListener() {
+        setHologramLineClickListener(null);
+    }
 
-	private void touchHandler(@NotNull HologramLineClickEvent hologramLineClickEvent) {
-		Player player = hologramLineClickEvent.getPlayer();
-		if (player.isSneaking()) {
-			InventoryUI ui;
-			if (isOwner(player.getUniqueId())) ui = new LikeEditingUI(this);
-			else if (player.hasPermission(Main.OPERATOR_PERMISSION)) ui = new AdministratorUI(this);
-			else ui = new LikeInformationUI(this);
-			ui.open(player);
-		} else {
-			if (isOwner(player.getUniqueId())) {
-				Text.of("&c-自分のLikeはお気に入りに登録できません。").sendTo(player);
-				return;
-			}
+    private void touchHandler(@NotNull HologramLineClickEvent hologramLineClickEvent) {
+        Player player = hologramLineClickEvent.getPlayer();
+        if (player.isSneaking()) {
+            InventoryUI ui;
+            if (isOwner(player.getUniqueId())) ui = new LikeEditingUI(this);
+            else if (player.hasPermission(Main.OPERATOR_PERMISSION)) ui = new AdministratorUI(this);
+            else ui = new LikeInformationUI(this);
+            ui.open(player);
+        } else {
+            if (isOwner(player.getUniqueId())) {
+                Text.of("&c-自分のLikeはお気に入りに登録できません。").sendTo(player);
+                return;
+            }
 
-			PlayerData data = plugin.players.get(player.getUniqueId());
-			if (data.isFavoriteLike(this)) {
-				Text.of("&c-このLikeは既にお気に入りに登録しています。").sendTo(player);
-				return;
-			}
+            PlayerData data = plugin.players.get(player.getUniqueId());
+            if (data.isFavoriteLike(this)) {
+                Text.of("&c-このLikeは既にお気に入りに登録しています。").sendTo(player);
+                return;
+            }
 
-			data.favoriteLike(this);
-			incrementFavorites();
-			Text.of("&a-このLikeをお気に入りに登録しました！", config.tip()).sendTo(player);
-		}
-	}
+            data.favoriteLike(this);
+            incrementFavorites();
+            Text.of("&a-このLikeをお気に入りに登録しました！", config.tip()).sendTo(player);
+        }
+    }
 
     private void setHologramLineClickListener(HologramLineClickListener listener) {
         Location loc = hologram.getPosition().toLocation();
         loc.setPitch(90.0F);
 
-		((ClickableHologramLine) hologram.getLines().get(0)).setClickListener(listener);
-		((ClickableHologramLine) hologram.getLines().get(2)).setClickListener(listener);
+        ((ClickableHologramLine) hologram.getLines().get(0)).setClickListener(listener);
+        ((ClickableHologramLine) hologram.getLines().get(2)).setClickListener(listener);
     }
 
     @Override

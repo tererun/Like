@@ -39,7 +39,7 @@ public class LikeDatabase extends Config {
             Location location = new Location(Bukkit.getWorld(UUID.fromString(locations[0])), Double.parseDouble(locations[1]), Double.parseDouble(locations[2]), Double.parseDouble(locations[3]));
             String description = data[3];
             Hologram hologram = holographicDisplaysAPI.createHologram(location);
-            Like like = new Like(hologram, id, owner, favorites, description, false);
+            Like like = new Like(hologram, id, owner, favorites, description);
             likes.put(id, like);
             if (!playerLikes.containsKey(owner)) playerLikes.put(owner, new ArrayList<>());
             playerLikes.get(owner).add(like);
