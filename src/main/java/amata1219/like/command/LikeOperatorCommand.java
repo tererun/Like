@@ -475,6 +475,7 @@ public class LikeOperatorCommand implements BukkitCommandExecutor {
 				plugin.likeMap.put(like);
 				likeSaveQueue.addLike(like);
 				internalHologramEditor.delete(internalHologram);
+				internalHologramEditor.saveChanges(internalHologram, InternalHologramChangeEvent.ChangeType.DELETE);
 			}
 			HashMap<UUID, List<OldLike>> readSecond = new HashMap<>(maps.second);
 			HashMap<UUID, List<Like>> convertedSecond = new HashMap<>();
