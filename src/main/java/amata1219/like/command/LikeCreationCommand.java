@@ -1,15 +1,12 @@
 package amata1219.like.command;
 
-import amata1219.like.consts.Like;
 import amata1219.like.Main;
 import amata1219.like.bryionake.constant.CommandSenderCasters;
 import amata1219.like.bryionake.dsl.BukkitCommandExecutor;
 import amata1219.like.bryionake.dsl.context.CommandContext;
 import amata1219.like.config.MainConfig;
-import amata1219.like.playerdata.PlayerData;
-import amata1219.like.task.TaskRunner;
-import me.filoghost.holographicdisplays.api.beta.HolographicDisplaysAPI;
-import me.filoghost.holographicdisplays.api.beta.hologram.Hologram;
+import amata1219.like.consts.Like;
+import amata1219.like.utils.LikeUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -22,36 +19,28 @@ public class LikeCreationCommand implements BukkitCommandExecutor {
 	private final CommandContext<CommandSender> executor = define(CommandSenderCasters.casterToPlayer, (sender, unparsedArguments, parsedArguments) -> {
 		Main plugin = Main.plugin();
 		MainConfig config = plugin.config();
+		UUID ownerUUID = sender.getUniqueId();
 
-		if (!config.canLikesBeCreatedIn(sender.getWorld())) {
+		LikeUtil.LikeCreationResult likeCreationResult = LikeUtil.createLike(plugin, config, sender, ownerUUID, false);
+		LikeUtil.LikeCreationStatus likeCreationStatus = likeCreationResult.getStatus();
+
+		if (likeCreationStatus == LikeUtil.LikeCreationStatus.FAILED_DISABLED_IN_WORLD) {
 			sender.sendMessage(ChatColor.RED + "このワールドではLikeを作成できません。");
 			return;
 		}
 
-		if (plugin.cooldownMap.contains(sender.getUniqueId())) {
+		if (likeCreationStatus == LikeUtil.LikeCreationStatus.FAILED_COOLDOWN) {
 			sender.sendMessage(ChatColor.RED + "クールダウン中であるためLikeを作成できません。");
 			return;
 		}
 
-		UUID uniqueId = sender.getUniqueId();
-		PlayerData playerdata = plugin.players.get(uniqueId);
-		if (playerdata.likes.size() >= plugin.likeLimitDatabase().read(uniqueId)) {
+		if (likeCreationStatus == LikeUtil.LikeCreationStatus.FAILED_LIMIT) {
 			sender.sendMessage(ChatColor.RED + "Likeの作成上限に達しているため、これ以上Likeを作成できません。");
 			return;
 		}
 
-		HolographicDisplaysAPI holographicDisplaysAPI = Main.getHolographicDisplaysAPI();
-		Hologram hologram = holographicDisplaysAPI.createHologram(sender.getLocation().add(0, 2, 0));
-		Like like = new Like(hologram, System.currentTimeMillis(), uniqueId);
-		like.save();
-
-		plugin.likes.put(like.id, like);
-		plugin.likeMap.put(like);
-		playerdata.registerLike(like);
-
+		Like like = likeCreationResult.getLike();
 		sender.sendMessage(ChatColor.GREEN + "Like(ID: " + like.id + ")を作成しました。");
-
-		TaskRunner.runTaskLaterSynchronously(task -> plugin.cooldownMap.remove(uniqueId), config.numberOfSecondsOfLikeCreationCooldown());
 	});
 
 	@Override
