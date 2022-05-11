@@ -26,7 +26,7 @@ public class Skull {
 	public static ItemStack createFrom(String base64){
 		int hash = base64.hashCode();
 		UUID uuid = new UUID(hash, hash);
-		String data = "{SkullOwner:{Id:\"" + uuid.toString() + "\",Properties:{textures:[{Value:\"" + base64 + "\"}]}}}";
+		String data = "{SkullOwner:{Id:\"" + uuid + "\",Properties:{textures:[{Value:\"" + base64 + "\"}]}}}";
 		return Bukkit.getUnsafe().modifyItemStack(new ItemStack(Material.PLAYER_HEAD), data);
 	}
 
