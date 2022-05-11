@@ -14,6 +14,7 @@ import amata1219.like.masquerade.dsl.component.Layout;
 import amata1219.like.masquerade.enchantment.GleamEnchantment;
 import amata1219.like.playerdata.PlayerData;
 import amata1219.like.playerdata.PlayerDatabase;
+import amata1219.like.storages.ItemStorage;
 import amata1219.like.task.TourRegularNotificationTask;
 import amata1219.like.tuplet.Tuple;
 import at.pcgamingfreaks.UUIDConverter;
@@ -73,6 +74,7 @@ public class Main extends JavaPlugin {
     private LikeLimitDatabase likeLimitDatabase;
     private BookmarkDatabase bookmarkDatabase;
     private TourConfig tourConfig;
+    private ItemStorage itemStorage;
 
     public final HashMap<Long, Like> likes = new HashMap<>();
     public final LikeMap likeMap = new LikeMap();
@@ -88,6 +90,7 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
+        itemStorage = new ItemStorage();
 
         Plugin vault = getServer().getPluginManager().getPlugin("Vault");
         if (vault == null) throw new NullPointerException("Not found Vault.");
@@ -168,6 +171,7 @@ public class Main extends JavaPlugin {
             if (player.getOpenInventory().getTopInventory().getHolder() instanceof Layout) player.closeInventory();
         }
 
+        holographicDisplaysAPI.deleteHolograms();
         HandlerList.unregisterAll(this);
     }
 
@@ -206,6 +210,10 @@ public class Main extends JavaPlugin {
 
     public TourConfig tourConfig() {
         return tourConfig;
+    }
+
+    public ItemStorage itemStorage() {
+        return itemStorage;
     }
 
 }
