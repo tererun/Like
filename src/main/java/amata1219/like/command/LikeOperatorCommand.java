@@ -489,6 +489,7 @@ public class LikeOperatorCommand implements BukkitCommandExecutor {
 			plugin.players.putAll(plugin.playerDatabase().readAll(convertedSecond));
 			likeSaveQueue.saveChanges();
 			sender.sendMessage(ChatColor.GREEN + "v3からv4へのデータ移行が完了しました!");
+			sender.sendMessage(ChatColor.GREEN + "必ず再起動を行ってください。");
 		};
 
 		executor = define(
