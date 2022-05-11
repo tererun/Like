@@ -63,6 +63,53 @@ public class LikeOperatorCommand implements BukkitCommandExecutor {
 				ParserTemplates.like
 		));
 
+		CommandContext<CommandSender> createWithDescription = define(
+				() -> join(
+						ChatColor.RED + "正しいコマンドが入力されなかったため実行できませんでした。",
+						ChatColor.GRAY + "指定したユーザー名でLikeホログラムを作る：/likeop create <プレイヤー名> [表示text]"
+				),
+				(sender, unparsedArguments, parsedArguments) -> {
+					if (!(sender instanceof Player player)) {
+						sender.sendMessage(CommandSenderCasters.senderCastErrorMessage);
+						return;
+					}
+
+					Main plugin = Main.plugin();
+					MainConfig config = plugin.config();
+					OfflinePlayer ownerOfflinePlayer = parsedArguments.poll();
+					StringBuilder description = null;
+					int unparsedArgumentsSize = unparsedArguments.size();
+					if (unparsedArgumentsSize != 0) {
+						description = new StringBuilder();
+						int index = 0;
+						for (String lore : unparsedArguments) {
+							description.append(lore);
+							if (index <= unparsedArgumentsSize - 2) {
+								description.append(" ");
+							}
+							index++;
+						}
+					}
+					LikeUtil.LikeCreationResult likeCreationResult = LikeUtil.createLike(plugin, config, player, ownerOfflinePlayer.getUniqueId(), true);
+					LikeUtil.LikeCreationStatus likeCreationStatus = likeCreationResult.getStatus();
+
+					if (likeCreationStatus == LikeUtil.LikeCreationStatus.FAILED_DISABLED_IN_WORLD) {
+						sender.sendMessage(ChatColor.RED + "このワールドではLikeを作成できません。");
+						return;
+					}
+
+					if (likeCreationStatus == LikeUtil.LikeCreationStatus.FAILED_LIMIT) {
+						sender.sendMessage(ChatColor.RED + "Likeの作成上限に達しているため、これ以上Likeを作成できません。");
+						return;
+					}
+
+					Like like = likeCreationResult.getLike();
+					if (description != null) like.setDescription(description.toString());
+					sender.sendMessage(ChatColor.GREEN + "Like(ID: " + like.id + ")を作成しました。");
+				},
+				ParserTemplates.player
+		);
+
 		CommandContext<CommandSender> delete = define(
 				() -> join(
 						ChatColor.RED + "正しいコマンドが入力されなかったため実行できませんでした。",
@@ -465,6 +512,7 @@ public class LikeOperatorCommand implements BukkitCommandExecutor {
 						ChatColor.GRAY + "v3からv4にデータを移行する：/likeop converttov4"
 				),
 				bind("move", move),
+				bind("create", createWithDescription),
 				bind("delete", delete),
 				bind("deleteplayer", deletePlayer),
 				bind("deleteworld", deleteWorld),
