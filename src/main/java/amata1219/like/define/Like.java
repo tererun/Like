@@ -1,4 +1,4 @@
-package amata1219.like.consts;
+package amata1219.like.define;
 
 import amata1219.like.Main;
 import amata1219.like.config.LikeSaveQueue;
@@ -10,11 +10,9 @@ import amata1219.like.playerdata.PlayerData;
 import amata1219.like.ui.AdministratorUI;
 import amata1219.like.ui.LikeEditingUI;
 import amata1219.like.ui.LikeInformationUI;
-import me.filoghost.holographicdisplays.api.beta.hologram.Hologram;
-import me.filoghost.holographicdisplays.api.beta.hologram.line.ClickableHologramLine;
-import me.filoghost.holographicdisplays.api.beta.hologram.line.HologramLineClickEvent;
-import me.filoghost.holographicdisplays.api.beta.hologram.line.HologramLineClickListener;
-import me.filoghost.holographicdisplays.api.beta.hologram.line.TextHologramLine;
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.handler.TouchHandler;
+import com.gmail.filoghost.holographicdisplays.api.line.TouchableLine;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -65,36 +63,36 @@ public class Like {
     }
 
     private void appendTextLine(String text) {
-        hologram.getLines().appendText(text);
+        hologram.appendTextLine(text);
         save();
     }
 
     public World world() {
-        return hologram.getPosition().getWorldIfLoaded();
+        return hologram.getLocation().getWorld();
     }
 
     public int blockX() {
-        return (int) hologram.getPosition().getX();
+        return (int) hologram.getLocation().getX();
     }
 
     public int blockY() {
-        return (int) hologram.getPosition().getY();
+        return (int) hologram.getLocation().getY();
     }
 
     public int blockZ() {
-        return (int) hologram.getPosition().getZ();
+        return (int) hologram.getLocation().getZ();
     }
 
     public double x() {
-        return hologram.getPosition().getX();
+        return hologram.getLocation().getX();
     }
 
     public double y() {
-        return hologram.getPosition().getY();
+        return hologram.getLocation().getY();
     }
 
     public double z() {
-        return hologram.getPosition().getZ();
+        return hologram.getLocation().getZ();
     }
 
     public UUID owner() {
@@ -145,7 +143,7 @@ public class Like {
     }
 
     private void rewriteHologramLine(int index, String text) {
-        ((TextHologramLine) hologram.getLines().get(index)).setText(text);
+        hologram.insertTextLine(index, text);
         if (index == 0) {
             disableHologramLineClickListener();
             enableHologramLineClickListener();
@@ -158,7 +156,7 @@ public class Like {
     }
 
     public void teleportTo(Location loc) {
-        hologram.setPosition(loc.add(0, 2, 0));
+        hologram.teleport(loc.add(0, 2, 0));
         disableHologramLineClickListener();
         enableHologramLineClickListener();
         save();
@@ -192,8 +190,7 @@ public class Like {
         setHologramLineClickListener(null);
     }
 
-    private void touchHandler(@NotNull HologramLineClickEvent hologramLineClickEvent) {
-        Player player = hologramLineClickEvent.getPlayer();
+    private void touchHandler(@NotNull Player player) {
         if (player.isSneaking()) {
             InventoryUI ui;
             if (isOwner(player.getUniqueId())) ui = new LikeEditingUI(this);
@@ -218,12 +215,12 @@ public class Like {
         }
     }
 
-    private void setHologramLineClickListener(HologramLineClickListener listener) {
-        Location loc = hologram.getPosition().toLocation();
+    private void setHologramLineClickListener(TouchHandler listener) {
+        Location loc = hologram.getLocation();
         loc.setPitch(90.0F);
 
-        ((ClickableHologramLine) hologram.getLines().get(0)).setClickListener(listener);
-        ((ClickableHologramLine) hologram.getLines().get(2)).setClickListener(listener);
+        ((TouchableLine) hologram.getLine(0)).setTouchHandler(listener);
+        ((TouchableLine) hologram.getLine(2)).setTouchHandler(listener);
     }
 
     @Override

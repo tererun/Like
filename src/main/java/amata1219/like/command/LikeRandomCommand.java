@@ -3,7 +3,7 @@ package amata1219.like.command;
 import amata1219.like.bryionake.constant.CommandSenderCasters;
 import amata1219.like.bryionake.dsl.BukkitCommandExecutor;
 import amata1219.like.bryionake.dsl.context.CommandContext;
-import amata1219.like.consts.Like;
+import amata1219.like.define.Like;
 import amata1219.like.Main;
 import amata1219.like.config.MainConfig;
 import amata1219.like.sound.SoundEffects;
@@ -55,7 +55,7 @@ public class LikeRandomCommand implements BukkitCommandExecutor {
                 ChatColor.GREEN + "" + remainingSeconds + "秒後にテレポートします！");
 
         TaskRunner.runTaskLaterSynchronously(task -> {
-            sender.teleport(like.hologram.getPosition().toLocation());
+            sender.teleport(like.hologram.getLocation());
             SoundEffects.SUCCEEDED.play(sender);
             sender.sendMessage(ChatColor.GREEN + "Like (ID: " + like.id + ") にテレポートしました！");
         }, config.randomTeleportationDelayedTicks());

@@ -1,6 +1,6 @@
 package amata1219.like.ui;
 
-import amata1219.like.consts.Like;
+import amata1219.like.define.Like;
 import amata1219.like.config.MainConfig;
 import amata1219.like.listener.ControlLikeViewListener;
 import amata1219.like.masquerade.dsl.component.Layout;
@@ -57,7 +57,7 @@ public class LikeRangeSearchingUI extends AbstractSortableLikeListUI {
 
                 s.onClick(e -> {
                     Location respawnPoint = player.getLocation();
-                    player.teleport(like.hologram.getPosition().toLocation());
+                    player.teleport(like.hologram.getLocation());
                     ControlLikeViewListener listener = plugin.controlLikeViewListener;
                     listener.viewersToRespawnPoints.put(player, respawnPoint);
                     listener.viewersToLikesViewed.put(player, like);

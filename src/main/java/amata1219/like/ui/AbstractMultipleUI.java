@@ -2,7 +2,7 @@ package amata1219.like.ui;
 
 import amata1219.like.Main;
 import amata1219.like.config.MainConfig;
-import amata1219.like.consts.Like;
+import amata1219.like.define.Like;
 import amata1219.like.masquerade.dsl.InventoryUI;
 import amata1219.like.masquerade.dsl.component.Layout;
 import amata1219.like.masquerade.option.Lines;

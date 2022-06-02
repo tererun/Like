@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import amata1219.like.consts.Like;
+import amata1219.like.define.Like;
 
 public class Bookmark {
 	

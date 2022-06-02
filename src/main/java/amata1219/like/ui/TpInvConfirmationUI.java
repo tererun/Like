@@ -12,7 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-import amata1219.like.consts.Like;
+import amata1219.like.define.Like;
 import amata1219.like.Main;
 import amata1219.like.config.MainConfig;
 import amata1219.like.config.MainConfig.IconType;
@@ -78,7 +78,7 @@ public class TpInvConfirmationUI implements InventoryUI {
 					}
 					economy.withdrawPlayer(p, costs);
 					economy.depositPlayer(Bukkit.getOfflinePlayer(like.owner()), config.teleportationCosts());
-					p.teleport(like.hologram.getPosition().toLocation());
+					p.teleport(like.hologram.getLocation());
 					config.teleportationText().apply(like).accept(p::sendMessage);
 
 					SoundEffects.SUCCEEDED.play(p);

@@ -1,9 +1,7 @@
-package amata1219.like.consts;
+package amata1219.like.define;
 
 import amata1219.like.Main;
 import amata1219.like.config.MainConfig;
-import me.filoghost.holographicdisplays.plugin.internal.hologram.InternalHologram;
-import me.filoghost.holographicdisplays.plugin.internal.hologram.InternalTextHologramLine;
 import org.bukkit.World;
 
 import java.text.SimpleDateFormat;
@@ -17,38 +15,38 @@ public class OldLike {
     private final MainConfig config = plugin.config();
 
     public final long id;
-    public final InternalHologram hologram;
+    public final HologramData hologram;
 
     private UUID owner;
     private int favorites;
 
-    public OldLike(InternalHologram hologram, long id, UUID owner, int favorites) {
+    public OldLike(HologramData hologram, long id, UUID owner, int favorites) {
         this.hologram = hologram;
         this.id = id;
         this.owner = owner;
         this.favorites = favorites;
     }
 
-    public OldLike(InternalHologram hologram, long id, UUID owner) {
+    public OldLike(HologramData hologram, long id, UUID owner) {
         this.hologram = hologram;
         this.id = id;
         this.owner = owner;
     }
 
     public World world() {
-        return hologram.getPosition().getWorldIfLoaded();
+        return hologram.getLocation().getWorld();
     }
 
     public int x() {
-        return (int) hologram.getPosition().getX();
+        return (int) hologram.getLocation().getX();
     }
 
     public int y() {
-        return (int) hologram.getPosition().getY();
+        return (int) hologram.getLocation().getY();
     }
 
     public int z() {
-        return (int) hologram.getPosition().getZ();
+        return (int) hologram.getLocation().getZ();
     }
 
     public UUID owner() {
@@ -64,7 +62,7 @@ public class OldLike {
     }
 
     public String description() {
-        return ((InternalTextHologramLine) hologram.getLines().get(1)).getText();
+        return hologram.getLines().get(1);
     }
 
     public int favorites() {

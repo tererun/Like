@@ -2,7 +2,7 @@ package amata1219.like.chunk;
 
 import java.util.stream.Collectors;
 
-import amata1219.like.consts.Like;
+import amata1219.like.define.Like;
 
 public class LikeMap extends ChunkMap<Like> {
 	

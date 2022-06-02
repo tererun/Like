@@ -1,7 +1,7 @@
 package amata1219.like.command;
 
 import amata1219.like.bryionake.dsl.parser.FailableParser;
-import amata1219.like.consts.Like;
+import amata1219.like.define.Like;
 import amata1219.like.Main;
 import amata1219.like.bookmark.Bookmark;
 import amata1219.like.bookmark.Order;

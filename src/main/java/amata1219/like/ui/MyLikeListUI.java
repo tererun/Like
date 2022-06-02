@@ -6,7 +6,7 @@ import java.util.UUID;
 import java.util.stream.IntStream;
 
 import org.bukkit.entity.Player;
-import amata1219.like.consts.Like;
+import amata1219.like.define.Like;
 import amata1219.like.config.MainConfig.IconType;
 import amata1219.like.masquerade.dsl.component.Layout;
 import amata1219.like.masquerade.text.Text;

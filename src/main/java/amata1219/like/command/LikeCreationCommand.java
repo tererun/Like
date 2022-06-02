@@ -5,7 +5,7 @@ import amata1219.like.bryionake.constant.CommandSenderCasters;
 import amata1219.like.bryionake.dsl.BukkitCommandExecutor;
 import amata1219.like.bryionake.dsl.context.CommandContext;
 import amata1219.like.config.MainConfig;
-import amata1219.like.consts.Like;
+import amata1219.like.define.Like;
 import amata1219.like.utils.LikeUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

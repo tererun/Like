@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
-import amata1219.like.consts.Like;
+import amata1219.like.define.Like;
 import amata1219.like.config.Config;
 
 public class BookmarkDatabase extends Config {

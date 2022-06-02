@@ -1,6 +1,6 @@
 package amata1219.like.listener;
 
-import amata1219.like.consts.Like;
+import amata1219.like.define.Like;
 import amata1219.like.ui.LikeRangeSearchingUI;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

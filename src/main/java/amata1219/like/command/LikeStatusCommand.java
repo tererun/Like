@@ -6,7 +6,7 @@ import amata1219.like.bryionake.constant.Parsers;
 import amata1219.like.bryionake.dsl.BukkitCommandExecutor;
 import amata1219.like.bryionake.dsl.context.BranchContext;
 import amata1219.like.bryionake.dsl.context.CommandContext;
-import amata1219.like.consts.Like;
+import amata1219.like.define.Like;
 import amata1219.like.chunk.LikeMap;
 import com.google.common.base.Joiner;
 import org.bukkit.ChatColor;

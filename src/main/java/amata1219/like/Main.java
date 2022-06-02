@@ -5,7 +5,7 @@ import amata1219.like.bookmark.BookmarkDatabase;
 import amata1219.like.chunk.LikeMap;
 import amata1219.like.command.*;
 import amata1219.like.config.*;
-import amata1219.like.consts.Like;
+import amata1219.like.define.Like;
 import amata1219.like.listener.ControlLikeViewListener;
 import amata1219.like.listener.CreatePlayerDataListener;
 import amata1219.like.listener.EditingLikeDescriptionListener;
@@ -17,8 +17,9 @@ import amata1219.like.playerdata.PlayerDatabase;
 import amata1219.like.storages.ItemStorage;
 import amata1219.like.task.TourRegularNotificationTask;
 import amata1219.like.tuplet.Tuple;
+import amata1219.like.utils.HologramUtil;
 import at.pcgamingfreaks.UUIDConverter;
-import me.filoghost.holographicdisplays.api.beta.HolographicDisplaysAPI;
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -41,7 +42,6 @@ import java.util.UUID;
 public class Main extends JavaPlugin {
 
     private static Main plugin;
-    private static HolographicDisplaysAPI holographicDisplaysAPI;
 
     public static final HashMap<UUID, String> UUID_CACHE = new HashMap<>();
 
@@ -50,10 +50,6 @@ public class Main extends JavaPlugin {
 
     public static Main plugin() {
         return plugin;
-    }
-
-    public static HolographicDisplaysAPI getHolographicDisplaysAPI() {
-        return holographicDisplaysAPI;
     }
 
     public static String nameFrom(UUID uuid) {
@@ -74,6 +70,7 @@ public class Main extends JavaPlugin {
     private LikeLimitDatabase likeLimitDatabase;
     private BookmarkDatabase bookmarkDatabase;
     private TourConfig tourConfig;
+    private HolographicConfig holographicConfig;
     private ItemStorage itemStorage;
 
     public final HashMap<Long, Like> likes = new HashMap<>();
@@ -102,8 +99,6 @@ public class Main extends JavaPlugin {
 
         if (!getServer().getPluginManager().isPluginEnabled("HolographicDisplays"))
             throw new NullPointerException("Not found HolographicDisplays.");
-
-        holographicDisplaysAPI = HolographicDisplaysAPI.get(Main.plugin());
 
         Field acceptingNew;
         try {
@@ -139,6 +134,7 @@ public class Main extends JavaPlugin {
         executors.put("likeorscu", new OpenRangeSearchConfirmationUICommand());
 
         getServer().getScheduler().runTaskLater(this, () -> {
+            holographicConfig = new HolographicConfig();
             likeDatabase = new LikeDatabase();
             Tuple<HashMap<Long, Like>, HashMap<UUID, List<Like>>> maps = likeDatabase.readAll();
             likes.putAll(maps.first);
@@ -171,7 +167,7 @@ public class Main extends JavaPlugin {
             if (player.getOpenInventory().getTopInventory().getHolder() instanceof Layout) player.closeInventory();
         }
 
-        holographicDisplaysAPI.deleteHolograms();
+        HologramUtil.getHolograms().clear();
         HandlerList.unregisterAll(this);
     }
 
@@ -210,6 +206,10 @@ public class Main extends JavaPlugin {
 
     public TourConfig tourConfig() {
         return tourConfig;
+    }
+
+    public HolographicConfig holographicConfig() {
+        return holographicConfig;
     }
 
     public ItemStorage itemStorage() {

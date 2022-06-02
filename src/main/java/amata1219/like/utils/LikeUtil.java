@@ -2,11 +2,10 @@ package amata1219.like.utils;
 
 import amata1219.like.Main;
 import amata1219.like.config.MainConfig;
-import amata1219.like.consts.Like;
+import amata1219.like.define.Like;
 import amata1219.like.playerdata.PlayerData;
 import amata1219.like.task.TaskRunner;
-import me.filoghost.holographicdisplays.api.beta.HolographicDisplaysAPI;
-import me.filoghost.holographicdisplays.api.beta.hologram.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -30,8 +29,7 @@ public class LikeUtil {
             return new LikeCreationResult(null, LikeCreationStatus.FAILED_LIMIT);
         }
 
-        HolographicDisplaysAPI holographicDisplaysAPI = Main.getHolographicDisplaysAPI();
-        Hologram hologram = holographicDisplaysAPI.createHologram(sender.getLocation().add(0, 2, 0));
+        Hologram hologram = HologramUtil.createHologram(sender.getLocation().add(0, 2, 0));
         Like like = new Like(hologram, System.currentTimeMillis(), ownerUUID);
         like.save();
 

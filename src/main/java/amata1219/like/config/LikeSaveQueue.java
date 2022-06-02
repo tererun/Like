@@ -1,7 +1,7 @@
 package amata1219.like.config;
 
 import amata1219.like.Main;
-import amata1219.like.consts.Like;
+import amata1219.like.define.Like;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
