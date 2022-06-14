@@ -13,17 +13,14 @@ import amata1219.like.bryionake.interval.Endpoint;
 import amata1219.like.bryionake.interval.Interval;
 import amata1219.like.chunk.LikeMap;
 import amata1219.like.config.*;
-import amata1219.like.define.HologramData;
 import amata1219.like.define.Like;
 import amata1219.like.define.OldLike;
-import amata1219.like.handler.HologramDataHandler;
 import amata1219.like.sound.SoundEffects;
 import amata1219.like.task.TourRegularNotificationTask;
 import amata1219.like.tuplet.Tuple;
 import amata1219.like.utils.HologramUtil;
 import amata1219.like.utils.LikeUtil;
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.google.common.base.Joiner;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -469,6 +466,7 @@ public class LikeOperatorCommand implements BukkitCommandExecutor {
 				plugin.likes.put(like.id, like);
 				plugin.likeMap.put(like);
 				likeSaveQueue.addLike(like);
+				Main.plugin().getLogger().info("deleted: " + oldLike.id);
 				holographicConfig.getConfig().set(String.valueOf(oldLike.id), null);
 			}
 			holographicConfig.saveConfig();
@@ -485,6 +483,7 @@ public class LikeOperatorCommand implements BukkitCommandExecutor {
 			likeSaveQueue.saveChanges();
 			sender.sendMessage(ChatColor.GREEN + "v3からv4へのデータ移行が完了しました!");
 			sender.sendMessage(ChatColor.GREEN + "必ず再起動を行ってください。");
+			sender.sendMessage(ChatColor.GREEN + "ホログラムの消去を行いました。行った一覧はコンソールに表示されています。");
 		};
 
 		executor = define(

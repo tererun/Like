@@ -143,6 +143,7 @@ public class Like {
     }
 
     private void rewriteHologramLine(int index, String text) {
+        hologram.removeLine(index);
         hologram.insertTextLine(index, text);
         if (index == 0) {
             disableHologramLineClickListener();

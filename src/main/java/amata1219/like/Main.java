@@ -167,7 +167,6 @@ public class Main extends JavaPlugin {
             if (player.getOpenInventory().getTopInventory().getHolder() instanceof Layout) player.closeInventory();
         }
 
-        HologramUtil.getHolograms().clear();
         HandlerList.unregisterAll(this);
     }
 
