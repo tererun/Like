@@ -1,11 +1,11 @@
 package amata1219.like.config;
 
-import amata1219.like.Main;
 import amata1219.like.define.Like;
 import amata1219.like.tuplet.Tuple;
 import amata1219.like.utils.HologramUtil;
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -38,7 +38,7 @@ public class LikeDatabase extends Config {
             Location location = new Location(Bukkit.getWorld(UUID.fromString(locations[0])), Double.parseDouble(locations[1]), Double.parseDouble(locations[2]), Double.parseDouble(locations[3]));
             String description = data[3];
             Hologram hologram = HologramUtil.createHologram(location);
-            Like like = new Like(hologram, id, owner, favorites, description);
+            Like like = new Like(hologram, id, owner, favorites, ChatColor.translateAlternateColorCodes('&', description));
             likes.put(id, like);
             if (!playerLikes.containsKey(owner)) playerLikes.put(owner, new ArrayList<>());
             playerLikes.get(owner).add(like);
