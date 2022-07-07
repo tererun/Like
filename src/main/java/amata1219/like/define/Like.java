@@ -19,6 +19,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -192,6 +194,11 @@ public class Like {
     }
 
     private void touchHandler(@NotNull Player player) {
+        UUID uuid = player.getUniqueId();
+        long time = new Date().getTime();
+        HashMap<UUID, Long> lastInteractedTime = Main.plugin().lastInteractedTime;
+        if (lastInteractedTime.containsKey(uuid) && (time - lastInteractedTime.get(uuid)) < 250) return;
+        lastInteractedTime.put(uuid, time);
         if (player.isSneaking()) {
             InventoryUI ui;
             if (isOwner(player.getUniqueId())) ui = new LikeEditingUI(this);

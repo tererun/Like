@@ -78,6 +78,7 @@ public class Main extends JavaPlugin {
     public final HashMap<UUID, PlayerData> players = new HashMap<>();
     public final HashMap<String, Bookmark> bookmarks = new HashMap<>();
     public final HashMap<UUID, Long> descriptionEditors = new HashMap<>();
+    public final HashMap<UUID, Long> lastInteractedTime = new HashMap<>();
     public final HashSet<UUID> cooldownMap = new HashSet<>();
 
     public ControlLikeViewListener controlLikeViewListener;
