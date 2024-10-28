@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'amata1219.like'
-version = 'v4.0.1'
+version = 'v5.0.0'
 
 repositories {
     mavenCentral()
