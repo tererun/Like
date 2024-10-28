@@ -84,3 +84,9 @@
   'Costs': 100.0
   #1回のテレポートで消費するコスト
 'Unit of cost': "MP"
+'Own likes':
+#自分のLikeについて
+  'Teleportable': false
+  #ワープ可能かどうか
+  'Warp Cost': 0
+  #ワープする際のコスト('Warp Cost' == 0 は無し、'Warp Cost' > 0 は徴収)
