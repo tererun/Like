@@ -1,7 +1,16 @@
 package amata1219.like.listener;
 
+import amata1219.like.Main;
+import amata1219.like.config.MainConfig;
 import amata1219.like.define.Like;
+import amata1219.like.masquerade.dsl.InventoryUI;
+import amata1219.like.masquerade.text.Text;
+import amata1219.like.playerdata.PlayerData;
+import amata1219.like.ui.AdministratorUI;
+import amata1219.like.ui.LikeEditingUI;
+import amata1219.like.ui.LikeInformationUI;
 import amata1219.like.ui.LikeRangeSearchingUI;
+import eu.decentsoftware.holograms.event.HologramClickEvent;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -11,13 +20,53 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
+import java.util.Date;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class ControlLikeViewListener implements Listener {
+
+    private final Main plugin = Main.plugin();
+    private final MainConfig config = plugin.config();
 
     public final HashMap<Player, Location> viewersToRespawnPoints = new HashMap<>();
     public final HashMap<Player, Like> viewersToLikesViewed = new HashMap<>();
     public final HashMap<Player, LikeRangeSearchingUI> viewersToUIs = new HashMap<>();
+
+    @EventHandler
+    public void onHologramClick(HologramClickEvent e) {
+        Player player = e.getPlayer();
+        UUID playerUUID = player.getUniqueId();
+        Like like = plugin.likes.get(Long.valueOf(e.getHologram().getName()));
+
+        long time = new Date().getTime();
+        HashMap<UUID, Long> lastInteractedTime = Main.plugin().lastInteractedTime;
+
+        if (lastInteractedTime.containsKey(playerUUID) && (time - lastInteractedTime.get(playerUUID)) < 250) return;
+        lastInteractedTime.put(playerUUID, time);
+        if (player.isSneaking()) {
+            InventoryUI ui;
+            if (like.isOwner(playerUUID)) ui = new LikeEditingUI(like);
+            else if (player.hasPermission(Main.OPERATOR_PERMISSION)) ui = new AdministratorUI(like);
+            else ui = new LikeInformationUI(like);
+            ui.open(player);
+        } else {
+            if (like.isOwner(playerUUID)) {
+                Text.of("&c-自分のLikeはお気に入りに登録できません。").sendTo(player);
+                return;
+            }
+
+            PlayerData data = plugin.players.get(player.getUniqueId());
+            if (data.isFavoriteLike(like)) {
+                Text.of("&c-このLikeは既にお気に入りに登録しています。").sendTo(player);
+                return;
+            }
+
+            data.favoriteLike(like);
+            like.incrementFavorites();
+            Text.of("&a-このLikeをお気に入りに登録しました！", config.tip()).sendTo(player);
+        }
+    }
 
     @EventHandler(ignoreCancelled = true)
     public void onTeleport(PlayerTeleportEvent event) {

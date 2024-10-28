@@ -20,8 +20,8 @@ import amata1219.like.task.TourRegularNotificationTask;
 import amata1219.like.tuplet.Tuple;
 import amata1219.like.utils.HologramUtil;
 import amata1219.like.utils.LikeUtil;
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.google.common.base.Joiner;
+import eu.decentsoftware.holograms.api.holograms.Hologram;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -33,6 +33,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
+@SuppressWarnings("unchecked")
 public class LikeOperatorCommand implements BukkitCommandExecutor {
 
 	private final CommandContext<CommandSender> executor;
@@ -461,7 +462,7 @@ public class LikeOperatorCommand implements BukkitCommandExecutor {
 			LikeSaveQueue likeSaveQueue = new LikeSaveQueue(UUID.randomUUID());
 			HolographicConfig holographicConfig = Main.plugin().holographicConfig();
 			for (OldLike oldLike : new HashMap<>(maps.first).values()) {
-				Hologram hologram = HologramUtil.createHologram(oldLike.hologram.getLocation());
+				Hologram hologram = HologramUtil.createHologram(oldLike.id, oldLike.hologram.getLocation());
 				Like like = new Like(hologram, oldLike.id, oldLike.owner(), oldLike.favorites(), oldLike.description());
 				plugin.likes.put(like.id, like);
 				plugin.likeMap.put(like);

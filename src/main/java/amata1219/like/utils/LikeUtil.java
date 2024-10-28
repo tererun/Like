@@ -5,7 +5,7 @@ import amata1219.like.config.MainConfig;
 import amata1219.like.define.Like;
 import amata1219.like.playerdata.PlayerData;
 import amata1219.like.task.TaskRunner;
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import eu.decentsoftware.holograms.api.holograms.Hologram;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -29,8 +29,9 @@ public class LikeUtil {
             return new LikeCreationResult(null, LikeCreationStatus.FAILED_LIMIT);
         }
 
-        Hologram hologram = HologramUtil.createHologram(sender.getLocation().add(0, 2, 0));
-        Like like = new Like(hologram, System.currentTimeMillis(), ownerUUID);
+        long id = System.currentTimeMillis();
+        Hologram hologram = HologramUtil.createHologram(id, sender.getLocation().add(0, 2, 0));
+        Like like = new Like(hologram, id, ownerUUID);
         like.save();
 
         plugin.likes.put(like.id, like);
