@@ -13,6 +13,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+@SuppressWarnings("unchecked")
 public class LikeStatusCommand implements BukkitCommandExecutor {
 
 	private final CommandContext<CommandSender> executor;

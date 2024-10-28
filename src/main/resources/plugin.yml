@@ -1,7 +1,11 @@
 name: Like
 main: amata1219.like.Main
 version: '${version}'
-depend: [HolographicDisplays, Vault, PCGF_PluginLib]
+depend:
+  - Vault
+  - PCGF_PluginLib
+softdepend:
+  - DecentHolograms
 api-version: 1.18
 author: '@amata1219, tererun'
 

@@ -3,24 +3,14 @@ package amata1219.like.define;
 import amata1219.like.Main;
 import amata1219.like.config.LikeSaveQueue;
 import amata1219.like.config.MainConfig;
-import amata1219.like.masquerade.dsl.InventoryUI;
 import amata1219.like.masquerade.task.AsyncTask;
-import amata1219.like.masquerade.text.Text;
 import amata1219.like.playerdata.PlayerData;
-import amata1219.like.ui.AdministratorUI;
-import amata1219.like.ui.LikeEditingUI;
-import amata1219.like.ui.LikeInformationUI;
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.handler.TouchHandler;
-import com.gmail.filoghost.holographicdisplays.api.line.TouchableLine;
+import eu.decentsoftware.holograms.api.DHAPI;
+import eu.decentsoftware.holograms.api.holograms.Hologram;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -47,8 +37,6 @@ public class Like {
         appendTextLine(config.likeFavoritesText().apply(favorites));
         appendTextLine(defaultDescription);
         appendTextLine(config.likeUsage());
-
-        enableHologramLineClickListener();
     }
 
     public Like(Hologram hologram, long id, UUID owner, int favorites, String description) {
@@ -60,12 +48,10 @@ public class Like {
         appendTextLine(config.likeFavoritesText().apply(favorites));
         appendTextLine(description);
         appendTextLine(config.likeUsage());
-
-        enableHologramLineClickListener();
     }
 
     private void appendTextLine(String text) {
-        hologram.appendTextLine(text);
+        DHAPI.addHologramLine(hologram, text);
         save();
     }
 
@@ -145,12 +131,8 @@ public class Like {
     }
 
     private void rewriteHologramLine(int index, String text) {
-        hologram.removeLine(index);
-        hologram.insertTextLine(index, text);
-        if (index == 0) {
-            disableHologramLineClickListener();
-            enableHologramLineClickListener();
-        }
+        DHAPI.removeHologramLine(hologram, index);
+        DHAPI.insertHologramLine(hologram, index, text);
         save();
     }
 
@@ -159,9 +141,7 @@ public class Like {
     }
 
     public void teleportTo(Location loc) {
-        hologram.teleport(loc.add(0, 2, 0));
-        disableHologramLineClickListener();
-        enableHologramLineClickListener();
+        hologram.setLocation(loc.clone().add(0, 2, 0));
         save();
     }
 
@@ -183,52 +163,6 @@ public class Like {
             likeSaveQueue.addLike(this);
             likeSaveQueue.saveDelete();
         }
-    }
-
-    private void enableHologramLineClickListener() {
-        setHologramLineClickListener(this::touchHandler);
-    }
-
-    private void disableHologramLineClickListener() {
-        setHologramLineClickListener(null);
-    }
-
-    private void touchHandler(@NotNull Player player) {
-        UUID uuid = player.getUniqueId();
-        long time = new Date().getTime();
-        HashMap<UUID, Long> lastInteractedTime = Main.plugin().lastInteractedTime;
-        if (lastInteractedTime.containsKey(uuid) && (time - lastInteractedTime.get(uuid)) < 250) return;
-        lastInteractedTime.put(uuid, time);
-        if (player.isSneaking()) {
-            InventoryUI ui;
-            if (isOwner(player.getUniqueId())) ui = new LikeEditingUI(this);
-            else if (player.hasPermission(Main.OPERATOR_PERMISSION)) ui = new AdministratorUI(this);
-            else ui = new LikeInformationUI(this);
-            ui.open(player);
-        } else {
-            if (isOwner(player.getUniqueId())) {
-                Text.of("&c-自分のLikeはお気に入りに登録できません。").sendTo(player);
-                return;
-            }
-
-            PlayerData data = plugin.players.get(player.getUniqueId());
-            if (data.isFavoriteLike(this)) {
-                Text.of("&c-このLikeは既にお気に入りに登録しています。").sendTo(player);
-                return;
-            }
-
-            data.favoriteLike(this);
-            incrementFavorites();
-            Text.of("&a-このLikeをお気に入りに登録しました！", config.tip()).sendTo(player);
-        }
-    }
-
-    private void setHologramLineClickListener(TouchHandler listener) {
-        Location loc = hologram.getLocation();
-        loc.setPitch(90.0F);
-
-        ((TouchableLine) hologram.getLine(0)).setTouchHandler(listener);
-        ((TouchableLine) hologram.getLine(2)).setTouchHandler(listener);
     }
 
     @Override
