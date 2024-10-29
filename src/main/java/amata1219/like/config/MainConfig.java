@@ -39,6 +39,8 @@ public class MainConfig extends Config {
 	private long randomTeleportationDelayedTicks;
 	private double randomTeleportationCosts;
 	private String unitOfCost;
+	private boolean ownLikesTeleportable;
+	private double ownLikesWarpCost;
 	
 	public MainConfig(){
 		super("config.yml");
@@ -108,6 +110,10 @@ public class MainConfig extends Config {
 		randomTeleportationCosts = randomTeleportation.getDouble("Costs");
 
 		unitOfCost = config.getString("Unit of cost");
+
+		ConfigurationSection ownLikes = config.getConfigurationSection("Own likes");
+		ownLikesTeleportable = ownLikes.getBoolean("Teleportable");
+		ownLikesWarpCost = ownLikes.getDouble("Warp Cost");
 	}
 	
 	public boolean canLikesBeCreatedIn(World world){
@@ -184,6 +190,14 @@ public class MainConfig extends Config {
 
 	public String unitOfCost() {
 		return unitOfCost;
+	}
+
+	public boolean ownLikesTeleportable() {
+		return ownLikesTeleportable;
+	}
+
+	public double ownLikesWarpCost() {
+		return ownLikesWarpCost;
 	}
 
 	public enum IconType {
